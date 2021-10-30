@@ -70,6 +70,23 @@ const run = async () => {
             res.json(order)
         });
 
+        // For Update Manage Order data from data base 
+
+        app.get('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const dataid = { _id: ObjectId(id) };
+            const result = await orderCollection.findOne(dataid);
+            res.send(result)
+        })
+
+        //Manage Orders Delete A Document 
+        app.delete('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const deleteid = { _id: ObjectId(id) };
+            const result = await orderCollection.deleteOne(deleteid);
+            res.json(result);
+        });
+
         
     }
     finally {
