@@ -70,14 +70,32 @@ const run = async () => {
             res.json(order)
         });
 
-        // For Update Manage Order data from data base 
-
+        // For Update Manage Order data find from data base 
         app.get('/order/:id', async (req, res) => {
             const id = req.params.id;
             const dataid = { _id: ObjectId(id) };
             const result = await orderCollection.findOne(dataid);
             res.send(result)
-        })
+        });
+
+        //Update Manage Order data get update from database
+        app.put('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateorder = req.body;
+            const idorder = { _id: ObjectId(id) };
+            const options = { upsert: true }
+            const updateDocument = {
+                $set: {
+                    email: updateorder.email,
+                    journeydate: updateorder.journeydate,
+                    returndate: updateorder.returndate,
+                    people: updateorder.people
+                }
+            }
+            const result = await orderCollection.updateOne(idorder, updateDocument, options);
+            res.json(result);
+        });
+
 
         //Manage Orders Delete A Document 
         app.delete('/order/:id', async (req, res) => {
@@ -98,14 +116,10 @@ run().catch(console.dir)
 
 
 app.get('/', (req, res) => {
-    
     console.log('This is Travel Website');
     res.send('Server Is Running Travel Website')
-
 });
 
-
 app.listen(port, () =>{
-   
     console.log(`This server is running http://localhost:${port}`);  
 });
